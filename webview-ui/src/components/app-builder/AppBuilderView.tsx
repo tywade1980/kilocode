@@ -31,14 +31,6 @@ const AppBuilderView: React.FC<AppBuilderViewProps> = () => {
 	const [isBuilding, setIsBuilding] = useState<boolean>(false)
 
 	const handleBuildApp = () => {
-		if (!appName.trim()) {
-			vscode.postMessage({
-				type: "showError",
-				text: "Please enter an application name",
-			})
-			return
-		}
-
 		setIsBuilding(true)
 
 		const options: Record<string, any> = {}
