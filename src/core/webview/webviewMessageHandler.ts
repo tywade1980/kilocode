@@ -131,6 +131,15 @@ function generateAppBuildTask(
 - Add a README with setup instructions
 - Include essential dependencies`
 			break
+		case "android":
+			task += `Please create a native Android application with the following structure:
+- Use Kotlin as the primary programming language
+- Set up Android project with Gradle build system
+- Include Android Jetpack components (ViewModel, LiveData, etc.)
+- Set up Material Design 3 components
+- Add a README with setup instructions
+- Configure for both debug and release builds`
+			break
 		default:
 			task += `Please create a ${appType} application following best practices and conventions for this type of project.`
 	}
@@ -139,7 +148,16 @@ function generateAppBuildTask(
 	if (options && Object.keys(options).length > 0) {
 		task += `\n\nAdditional requirements:\n`
 		for (const [key, value] of Object.entries(options)) {
-			task += `- ${key}: ${value}\n`
+			if (key === "enableDevMode" && value === true) {
+				task += `- Enable Dev Mode: Set up the application with hot-reload/live-reload capabilities, embedded development tools, and a command-line interface for real-time iteration during runtime. This should include:\n`
+				task += `  * Configure the app to run in development mode with debugging enabled\n`
+				task += `  * Set up hot module replacement or live reload\n`
+				task += `  * Include a development server or runtime environment\n`
+				task += `  * Add terminal/console access for runtime commands\n`
+				task += `  * Configure for easy iteration and testing on device/emulator\n`
+			} else {
+				task += `- ${key}: ${value}\n`
+			}
 		}
 	}
 

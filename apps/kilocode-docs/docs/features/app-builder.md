@@ -36,6 +36,7 @@ App Builder supports the following application types out of the box:
 
 ### Mobile
 - **Flutter** - Cross-platform mobile application
+- **Android** - Native Android application with Kotlin
 
 ### Custom
 - **Custom Application** - Specify your own requirements and let Kilo Code build it
@@ -53,7 +54,12 @@ App Builder supports the following application types out of the box:
    - "Use Material-UI for styling"
    - "Add Jest testing setup"
    - "Include Docker configuration"
-5. **Click "Build Application"**: Kilo Code will create a new task and start building your application
+5. **Enable Dev Mode (Hybrid CI/CD)** (optional): Check this option to set up the application with:
+   - Hot-reload/live-reload capabilities for real-time code changes
+   - Embedded development tools and command-line interface
+   - Runtime iteration support on device/emulator
+   - Development server configuration for easy testing
+6. **Click "Build Application"**: Kilo Code will create a new task and start building your application
 
 ## How It Works
 
@@ -88,6 +94,42 @@ Kilo Code will create a complete React app with TypeScript, routing, and Tailwin
 5. Click "Build Application"
 
 Kilo Code will create a FastAPI application with authentication and database setup.
+
+### Creating an Android App with Dev Mode
+
+1. Select "Android Application" from the dropdown
+2. Name: `my-android-app`
+3. Enable Dev Mode: Check the "Enable Dev Mode (Hybrid CI/CD)" checkbox
+4. Click "Build Application"
+
+Kilo Code will create a native Android application with Kotlin that includes:
+- Hot-reload capabilities for instant code changes
+- Embedded development tools
+- Terminal access for runtime commands
+- Easy testing on emulator or physical device
+
+## Dev Mode (Hybrid CI/CD)
+
+Dev Mode is a special feature that configures your application for real-time iteration during development. When enabled, Kilo Code will set up:
+
+### Key Features
+- **Hot Module Replacement**: See your changes instantly without restarting the app
+- **Live Reload**: Automatic app refresh when code changes
+- **Embedded Terminal**: Command-line access during runtime for debugging and testing
+- **Development Server**: Configured server environment for easy testing
+- **Device/Emulator Support**: Optimized for testing on actual devices or emulators
+
+### Supported App Types
+Dev Mode is particularly useful for:
+- **Mobile Apps** (Android, Flutter): Test changes on emulator or device in real-time
+- **Web Apps** (React, Next.js, Vue): Instant browser refresh with hot reload
+- **Backend APIs** (Node.js, Python): Auto-restart server on code changes
+
+### Use Cases
+- Rapid prototyping and feature development
+- Live debugging on actual devices
+- Interactive development with immediate feedback
+- Real-time UI/UX adjustments
 
 ## Tips
 

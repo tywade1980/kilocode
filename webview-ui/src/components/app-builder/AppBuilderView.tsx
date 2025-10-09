@@ -19,6 +19,7 @@ const APP_TYPES = [
 	{ value: "fastapi", label: "FastAPI Application", description: "Modern Python API framework" },
 	{ value: "django", label: "Django Application", description: "Python web framework" },
 	{ value: "flutter", label: "Flutter Application", description: "Cross-platform mobile app" },
+	{ value: "android", label: "Android Application", description: "Native Android app with Kotlin" },
 	{ value: "custom", label: "Custom Application", description: "Specify your own requirements" },
 ]
 
@@ -29,6 +30,7 @@ const AppBuilderView: React.FC<AppBuilderViewProps> = () => {
 	const [targetPath, setTargetPath] = useState<string>("")
 	const [customRequirements, setCustomRequirements] = useState<string>("")
 	const [isBuilding, setIsBuilding] = useState<boolean>(false)
+	const [enableDevMode, setEnableDevMode] = useState<boolean>(false) // kilocode_change
 
 	const handleBuildApp = () => {
 		setIsBuilding(true)
@@ -37,6 +39,11 @@ const AppBuilderView: React.FC<AppBuilderViewProps> = () => {
 		if (customRequirements.trim()) {
 			options.customRequirements = customRequirements
 		}
+		// kilocode_change start
+		if (enableDevMode) {
+			options.enableDevMode = true
+		}
+		// kilocode_change end
 
 		// Send message to extension to build the app
 		vscode.postMessage({
@@ -197,6 +204,25 @@ const AppBuilderView: React.FC<AppBuilderViewProps> = () => {
 						Any special features or configurations you'd like to include
 					</p>
 				</div>
+
+				{/* kilocode_change start - Dev Mode Checkbox */}
+				<div style={{ marginBottom: "20px" }}>
+					<label style={{ display: "flex", alignItems: "center", cursor: "pointer" }}>
+						<input
+							type="checkbox"
+							checked={enableDevMode}
+							onChange={(e) => setEnableDevMode(e.target.checked)}
+							style={{ marginRight: "8px" }}
+						/>
+						<span style={{ fontWeight: "500", fontSize: "13px" }}>
+							Enable Dev Mode (Hybrid CI/CD)
+						</span>
+					</label>
+					<p style={{ fontSize: "12px", color: "var(--vscode-descriptionForeground)", marginTop: "4px", marginLeft: "24px" }}>
+						Launch app on device with embedded Kilo Code assistant and terminal for real-time iteration during runtime
+					</p>
+				</div>
+				{/* kilocode_change end */}
 
 				{/* Build Button */}
 				<div style={{ marginTop: "30px" }}>
