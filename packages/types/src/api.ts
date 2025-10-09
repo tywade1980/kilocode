@@ -133,6 +133,17 @@ export interface RooCodeAPI extends EventEmitter<RooCodeAPIEvents> {
 	 * @throws Error if the profile does not exist
 	 */
 	setActiveProfile(name: string): Promise<string | undefined>
+	// kilocode_change start
+	/**
+	 * Builds/scaffolds a new application using Kilo Code's capabilities
+	 * @param appType The type of application to build (e.g., "react", "nodejs", "python", etc.)
+	 * @param appName The name of the application
+	 * @param targetPath Optional target path where the app should be created
+	 * @param options Optional configuration for the app
+	 * @returns The ID of the task that will build the app
+	 */
+	buildApp(appType: string, appName: string, targetPath?: string, options?: Record<string, any>): Promise<string>
+	// kilocode_change end
 }
 
 export interface RooCodeIpcServer extends EventEmitter<IpcServerEvents> {

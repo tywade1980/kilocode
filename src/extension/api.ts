@@ -201,6 +201,84 @@ export class API extends EventEmitter<RooCodeEvents> implements RooCodeAPI {
 		return this.sidebarProvider.viewLaunched
 	}
 
+	// kilocode_change start
+	public async buildApp(
+		appType: string,
+		appName: string,
+		targetPath?: string,
+		options?: Record<string, any>,
+	): Promise<string> {
+		// Generate a task description for building the app
+		const taskDescription = this.generateAppBuildTask(appType, appName, targetPath, options)
+
+		// Start a new task with the generated description
+		return await this.startNewTask({
+			configuration: this.getConfiguration(),
+			text: taskDescription,
+		})
+	}
+
+	private generateAppBuildTask(
+		appType: string,
+		appName: string,
+		targetPath?: string,
+		options?: Record<string, any>,
+	): string {
+		const path = targetPath || `./${appName}`
+		let task = `Create a new ${appType} application named "${appName}" in the directory "${path}".\n\n`
+
+		// Add app type specific instructions
+		switch (appType.toLowerCase()) {
+			case "react":
+				task += `Please create a modern React application with the following structure:
+- Use Vite or Create React App
+- Include TypeScript support
+- Set up a basic component structure
+- Add a README with setup instructions
+- Include essential dependencies`
+				break
+			case "nodejs":
+			case "node":
+				task += `Please create a Node.js application with the following structure:
+- Initialize npm project with package.json
+- Set up a basic Express server (if web application)
+- Include TypeScript configuration
+- Add a README with setup instructions
+- Set up basic project structure`
+				break
+			case "python":
+				task += `Please create a Python application with the following structure:
+- Set up virtual environment configuration
+- Create requirements.txt
+- Set up basic project structure
+- Add a README with setup instructions
+- Include main application file`
+				break
+			case "nextjs":
+			case "next":
+				task += `Please create a Next.js application with the following structure:
+- Use create-next-app
+- Include TypeScript support
+- Set up app router
+- Add a README with setup instructions
+- Include essential dependencies`
+				break
+			default:
+				task += `Please create a ${appType} application following best practices and conventions for this type of project.`
+		}
+
+		// Add any custom options
+		if (options && Object.keys(options).length > 0) {
+			task += `\n\nAdditional requirements:\n`
+			for (const [key, value] of Object.entries(options)) {
+				task += `- ${key}: ${value}\n`
+			}
+		}
+
+		return task
+	}
+	// kilocode_change end
+
 	private registerListeners(provider: ClineProvider) {
 		provider.on(RooCodeEventName.TaskCreated, (task) => {
 			// Task Lifecycle

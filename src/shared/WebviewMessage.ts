@@ -291,6 +291,8 @@ export interface WebviewMessage {
 		| "editQueuedMessage"
 		| "dismissUpsell"
 		| "getDismissedUpsells"
+		| "buildApp" // kilocode_change
+		| "selectDirectory" // kilocode_change
 	text?: string
 	editedMessageContent?: string
 	tab?: "settings" | "history" | "mcp" | "modes" | "chat" | "marketplace" | "cloud"
@@ -357,6 +359,12 @@ export interface WebviewMessage {
 	upsellId?: string // For dismissUpsell
 	list?: string[] // For dismissedUpsells response
 	organizationId?: string | null // For organization switching
+	// kilocode_change start
+	appType?: string // For buildApp
+	appName?: string // For buildApp
+	targetPath?: string // For buildApp
+	options?: Record<string, any> // For buildApp
+	// kilocode_change end
 	codeIndexSettings?: {
 		// Global state settings
 		codebaseIndexEnabled: boolean

@@ -16,6 +16,7 @@ import HistoryView from "./components/history/HistoryView"
 import SettingsView, { SettingsViewRef } from "./components/settings/SettingsView"
 import WelcomeView from "./components/kilocode/Welcome/WelcomeView" // kilocode_change
 import ProfileView from "./components/kilocode/profile/ProfileView" // kilocode_change
+import AppBuilderView from "./components/app-builder/AppBuilderView" // kilocode_change
 import McpView from "./components/mcp/McpView"
 import { MarketplaceView } from "./components/marketplace/MarketplaceView"
 import ModesView from "./components/modes/ModesView"
@@ -32,7 +33,7 @@ import { TooltipProvider } from "./components/ui/tooltip"
 import { STANDARD_TOOLTIP_DELAY } from "./components/ui/standard-tooltip"
 import { useKiloIdentity } from "./utils/kilocode/useKiloIdentity"
 
-type Tab = "settings" | "history" | "mcp" | "modes" | "chat" | "marketplace" | "account" | "cloud" | "profile" // kilocode_change: add "profile"
+type Tab = "settings" | "history" | "mcp" | "modes" | "chat" | "marketplace" | "account" | "cloud" | "profile" | "app-builder" // kilocode_change: add "profile" and "app-builder"
 
 interface HumanRelayDialogState {
 	isOpen: boolean
@@ -67,6 +68,7 @@ const tabsByMessageAction: Partial<Record<NonNullable<ExtensionMessage["action"]
 	mcpButtonClicked: "mcp",
 	historyButtonClicked: "history",
 	profileButtonClicked: "profile",
+	appBuilderButtonClicked: "app-builder", // kilocode_change
 	marketplaceButtonClicked: "marketplace",
 	// cloudButtonClicked: "cloud", // kilocode_change: no cloud
 }
@@ -287,6 +289,8 @@ const App = () => {
 			)}
 			{/* kilocode_change: add profileview */}
 			{tab === "profile" && <ProfileView onDone={() => switchTab("chat")} />}
+			{/* kilocode_change: add app-builder view */}
+			{tab === "app-builder" && <AppBuilderView />}
 			{tab === "marketplace" && (
 				<MarketplaceView
 					stateManager={marketplaceStateManager}

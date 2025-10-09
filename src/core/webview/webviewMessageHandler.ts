@@ -82,6 +82,71 @@ import { UsageTracker } from "../../utils/usage-tracker"
 import { seeNewChanges } from "../checkpoints/kilocode/seeNewChanges" // kilocode_change
 import { getTaskHistory } from "../../shared/kilocode/getTaskHistory" // kilocode_change
 
+// kilocode_change start
+/**
+ * Generate task description for building an app
+ */
+function generateAppBuildTask(
+	appType: string,
+	appName: string,
+	targetPath?: string,
+	options?: Record<string, any>,
+): string {
+	const path = targetPath || `./${appName}`
+	let task = `Create a new ${appType} application named "${appName}" in the directory "${path}".\n\n`
+
+	// Add app type specific instructions
+	switch (appType.toLowerCase()) {
+		case "react":
+			task += `Please create a modern React application with the following structure:
+- Use Vite or Create React App
+- Include TypeScript support
+- Set up a basic component structure
+- Add a README with setup instructions
+- Include essential dependencies`
+			break
+		case "nodejs":
+		case "node":
+			task += `Please create a Node.js application with the following structure:
+- Initialize npm project with package.json
+- Set up a basic Express server (if web application)
+- Include TypeScript configuration
+- Add a README with setup instructions
+- Set up basic project structure`
+			break
+		case "python":
+			task += `Please create a Python application with the following structure:
+- Set up virtual environment configuration
+- Create requirements.txt
+- Set up basic project structure
+- Add a README with setup instructions
+- Include main application file`
+			break
+		case "nextjs":
+		case "next":
+			task += `Please create a Next.js application with the following structure:
+- Use create-next-app
+- Include TypeScript support
+- Set up app router
+- Add a README with setup instructions
+- Include essential dependencies`
+			break
+		default:
+			task += `Please create a ${appType} application following best practices and conventions for this type of project.`
+	}
+
+	// Add any custom options
+	if (options && Object.keys(options).length > 0) {
+		task += `\n\nAdditional requirements:\n`
+		for (const [key, value] of Object.entries(options)) {
+			task += `- ${key}: ${value}\n`
+		}
+	}
+
+	return task
+}
+// kilocode_change end
+
 export const webviewMessageHandler = async (
 	provider: ClineProvider,
 	message: WebviewMessage,
@@ -553,6 +618,57 @@ export const webviewMessageHandler = async (
 		// kilocode_change start
 		case "condense":
 			provider.getCurrentTask()?.handleWebviewAskResponse("yesButtonClicked")
+			break
+		case "buildApp":
+			try {
+				const { appType, appName, targetPath, options } = message
+				if (!appType || !appName) {
+					vscode.window.showErrorMessage("App type and name are required")
+					break
+				}
+				
+				// Generate task description for building the app
+				const taskDescription = generateAppBuildTask(appType, appName, targetPath, options)
+				
+				// Create a new task with the generated description
+				await provider.createTask(taskDescription)
+				
+				// Notify UI to reset and switch to chat
+				await provider.postMessageToWebview({
+					type: "invoke",
+					invoke: "newChat",
+				})
+				await provider.postMessageToWebview({
+					type: "action",
+					action: "chatButtonClicked",
+				})
+			} catch (error) {
+				vscode.window.showErrorMessage(
+					`Failed to build app: ${error instanceof Error ? error.message : String(error)}`,
+				)
+			}
+			break
+		case "selectDirectory":
+			try {
+				const result = await vscode.window.showOpenDialog({
+					canSelectFiles: false,
+					canSelectFolders: true,
+					canSelectMany: false,
+					openLabel: "Select Directory",
+				})
+				if (result && result.length > 0) {
+					const dirPath = result[0].fsPath
+					// Send the selected path back to webview
+					await provider.postMessageToWebview({
+						type: "insertTextIntoTextarea",
+						text: dirPath,
+					})
+				}
+			} catch (error) {
+				vscode.window.showErrorMessage(
+					`Failed to select directory: ${error instanceof Error ? error.message : String(error)}`,
+				)
+			}
 			break
 		// kilocode_change end
 		case "customInstructions":
