@@ -164,6 +164,16 @@ const getCommandsMap = ({ context, outputChannel }: RegisterCommandOptions): Rec
 
 		visibleProvider.postMessageToWebview({ type: "action", action: "profileButtonClicked" })
 	},
+	appBuilderButtonClicked: () => {
+		const visibleProvider = getVisibleProviderOrLog(outputChannel)
+
+		if (!visibleProvider) {
+			return
+		}
+
+		TelemetryService.instance.captureTitleButtonClicked("app-builder")
+		visibleProvider.postMessageToWebview({ type: "action", action: "appBuilderButtonClicked" })
+	},
 	helpButtonClicked: () => {
 		vscode.env.openExternal(vscode.Uri.parse("https://kilocode.ai"))
 	},

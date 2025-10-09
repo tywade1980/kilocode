@@ -164,6 +164,11 @@
 				"icon": "$(extensions)"
 			},
 			{
+				"command": "kilo-code.appBuilderButtonClicked",
+				"title": "App Builder",
+				"icon": "$(rocket)"
+			},
+			{
 				"command": "kilo-code.popoutButtonClicked",
 				"title": "%command.openInEditor.title%",
 				"icon": "$(link-external)"
@@ -353,6 +358,11 @@
 				{
 					"command": "kilo-code.marketplaceButtonClicked",
 					"group": "navigation@3",
+					"when": "view == kilo-code.SidebarProvider"
+				},
+				{
+					"command": "kilo-code.appBuilderButtonClicked",
+					"group": "navigation@3.5",
 					"when": "view == kilo-code.SidebarProvider"
 				},
 				{
