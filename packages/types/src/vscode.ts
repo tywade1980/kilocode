@@ -36,6 +36,7 @@ export const commandIds = [
 
 	"historyButtonClicked",
 	"marketplaceButtonClicked",
+	"appBuilderButtonClicked", // kilocode_change
 	"popoutButtonClicked",
 	"cloudButtonClicked",
 	"settingsButtonClicked",

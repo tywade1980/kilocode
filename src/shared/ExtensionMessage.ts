@@ -168,6 +168,7 @@ export interface ExtensionMessage {
 		| "historyButtonClicked"
 		| "promptsButtonClicked"
 		| "profileButtonClicked" // kilocode_change
+		| "appBuilderButtonClicked" // kilocode_change
 		| "marketplaceButtonClicked"
 		| "cloudButtonClicked"
 		| "didBecomeVisible"

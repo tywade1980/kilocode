@@ -201,6 +201,102 @@ export class API extends EventEmitter<RooCodeEvents> implements RooCodeAPI {
 		return this.sidebarProvider.viewLaunched
 	}
 
+	// kilocode_change start
+	public async buildApp(
+		appType: string,
+		appName: string,
+		targetPath?: string,
+		options?: Record<string, any>,
+	): Promise<string> {
+		// Generate a task description for building the app
+		const taskDescription = this.generateAppBuildTask(appType, appName, targetPath, options)
+
+		// Start a new task with the generated description
+		return await this.startNewTask({
+			configuration: this.getConfiguration(),
+			text: taskDescription,
+		})
+	}
+
+	private generateAppBuildTask(
+		appType: string,
+		appName: string,
+		targetPath?: string,
+		options?: Record<string, any>,
+	): string {
+		const path = targetPath || `./${appName}`
+		let task = `Create a new ${appType} application named "${appName}" in the directory "${path}".\n\n`
+
+		// Add app type specific instructions
+		switch (appType.toLowerCase()) {
+			case "react":
+				task += `Please create a modern React application with the following structure:
+- Use Vite or Create React App
+- Include TypeScript support
+- Set up a basic component structure
+- Add a README with setup instructions
+- Include essential dependencies`
+				break
+			case "nodejs":
+			case "node":
+				task += `Please create a Node.js application with the following structure:
+- Initialize npm project with package.json
+- Set up a basic Express server (if web application)
+- Include TypeScript configuration
+- Add a README with setup instructions
+- Set up basic project structure`
+				break
+			case "python":
+				task += `Please create a Python application with the following structure:
+- Set up virtual environment configuration
+- Create requirements.txt
+- Set up basic project structure
+- Add a README with setup instructions
+- Include main application file`
+				break
+			case "nextjs":
+			case "next":
+				task += `Please create a Next.js application with the following structure:
+- Use create-next-app
+- Include TypeScript support
+- Set up app router
+- Add a README with setup instructions
+- Include essential dependencies`
+				break
+			case "android":
+				task += `Please create a native Android application with the following structure:
+- Use Kotlin as the primary programming language
+- Set up Android project with Gradle build system
+- Include Android Jetpack components (ViewModel, LiveData, etc.)
+- Set up Material Design 3 components
+- Add a README with setup instructions
+- Configure for both debug and release builds`
+				break
+			default:
+				task += `Please create a ${appType} application following best practices and conventions for this type of project.`
+		}
+
+		// Add any custom options
+		if (options && Object.keys(options).length > 0) {
+			task += `\n\nAdditional requirements:\n`
+			for (const [key, value] of Object.entries(options)) {
+				if (key === "enableDevMode" && value === true) {
+					task += `- Enable Dev Mode: Set up the application with hot-reload/live-reload capabilities, embedded development tools, and a command-line interface for real-time iteration during runtime. This should include:\n`
+					task += `  * Configure the app to run in development mode with debugging enabled\n`
+					task += `  * Set up hot module replacement or live reload\n`
+					task += `  * Include a development server or runtime environment\n`
+					task += `  * Add terminal/console access for runtime commands\n`
+					task += `  * Configure for easy iteration and testing on device/emulator\n`
+				} else {
+					task += `- ${key}: ${value}\n`
+				}
+			}
+		}
+
+		return task
+	}
+	// kilocode_change end
+
 	private registerListeners(provider: ClineProvider) {
 		provider.on(RooCodeEventName.TaskCreated, (task) => {
 			// Task Lifecycle
